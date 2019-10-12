@@ -3,8 +3,7 @@ const bodyParser = require("body-parser");
 const CORS = require("cors");
 
 const app = express();
-const token =
-  "ahuBHejkJJiMDhmODZhZi0zaeLTQ4ZfeaseOGZgesai1jZWYgrTA07i73Gebhu98";
+const token = "ahuBHejkJJiMDhmODZhZi0zaeLTQ4ZfeaseOGZgesai1jZWYgrTA07i73Gebhu98";
 
 app.use(bodyParser.json());
 app.use(CORS());
@@ -102,7 +101,7 @@ function authenticator(req, res, next) {
 
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
-  if (username === "Lambda School" && password === "i<3Lambd4") {
+  if (username === "user" && password === "1234") {
     req.loggedIn = true;
     setTimeout(() => {
       res.status(200).json({
@@ -110,9 +109,7 @@ app.post("/api/login", (req, res) => {
       });
     }, 1000);
   } else {
-    res
-      .status(403)
-      .json({ error: "Username or Password incorrect. Please see Readme" });
+    res.status(403).json({ error: "Username or Password incorrect. Please see Readme" });
   }
 });
 
@@ -131,12 +128,9 @@ app.post("/api/colors", authenticator, (req, res) => {
 });
 
 app.put("/api/colors/:id", authenticator, (req, res) => {
-  if (!req.params.id)
-    res.status(400).send("Your request is missing the color id");
+  if (!req.params.id) res.status(400).send("Your request is missing the color id");
   if (req.body.id === undefined || !req.body.color || !req.body.code) {
-    res
-      .status(422)
-      .send("Make sure your request body has all the fields it needs");
+    res.status(422).send("Make sure your request body has all the fields it needs");
   }
   colors = colors.map(color => {
     if (`${color.id}` === req.params.id) {
@@ -148,8 +142,7 @@ app.put("/api/colors/:id", authenticator, (req, res) => {
 });
 
 app.delete("/api/colors/:id", authenticator, (req, res) => {
-  if (!req.params.id)
-    res.status(400).send("Your request is missing the color id");
+  if (!req.params.id) res.status(400).send("Your request is missing the color id");
   colors = colors.filter(color => `${color.id}` !== req.params.id);
   res.status(202).send(req.params.id);
 });
