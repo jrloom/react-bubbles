@@ -22,7 +22,7 @@ const ColorList = ({ colors, updateColors }) => {
       .put(`/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
         updateColors(
-          colors.map((color, id) => {
+          colors.map(color => {
             return color.id === res.data.id ? res.data : color;
           })
         );
@@ -37,7 +37,7 @@ const ColorList = ({ colors, updateColors }) => {
       .delete(`/colors/${color.id}`, color)
       .then(res => {
         updateColors(
-          colors.filter((color, id) => {
+          colors.filter(color => {
             return color.id !== res.data;
           })
         );
