@@ -24,7 +24,7 @@ const Login = props => {
           password: ""
         });
         localStorage.setItem("token", res.data.payload);
-        props.history.push("/bubbles");
+        props.history.push("/bubblepage");
       })
       .catch(err => console.error);
   };
