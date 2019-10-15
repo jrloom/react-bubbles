@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 const initialColor = {
   color: "",
@@ -18,13 +18,33 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
+    axiosWithAuth()
+      .put(`/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        updateColors(
+          colors.map(color => {
+            return color.id === res.data.id ? res.data : color;
+          })
+        );
+        setEditing(false);
+        setColorToEdit(initialColor);
+      })
+      .catch(err => console.error);
   };
 
   const deleteColor = color => {
-    // make a delete request to delete this color
+    axiosWithAuth()
+      .delete(`/colors/${color.id}`, color)
+      .then(res => {
+        updateColors(
+          colors.filter(color => {
+            return color.id !== res.data;
+          })
+        );
+        setEditing(false);
+        setColorToEdit(initialColor);
+      })
+      .catch(err => console.error);
   };
 
   return (
@@ -39,10 +59,7 @@ const ColorList = ({ colors, updateColors }) => {
               </span>{" "}
               {color.color}
             </span>
-            <div
-              className="color-box"
-              style={{ backgroundColor: color.code.hex }}
-            />
+            <div className="color-box" style={{ backgroundColor: color.code.hex }} />
           </li>
         ))}
       </ul>
@@ -51,12 +68,7 @@ const ColorList = ({ colors, updateColors }) => {
           <legend>edit color</legend>
           <label>
             color name:
-            <input
-              onChange={e =>
-                setColorToEdit({ ...colorToEdit, color: e.target.value })
-              }
-              value={colorToEdit.color}
-            />
+            <input onChange={e => setColorToEdit({ ...colorToEdit, color: e.target.value })} value={colorToEdit.color} />
           </label>
           <label>
             hex code:
